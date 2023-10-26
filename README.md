@@ -20,11 +20,7 @@ There is one massive difference though and that is how the voltages are being ge
 TBD.
 
 ## To read
-For the ADC, the following parts are "must reads":
-
-TBD.
-
-And for the DAC:
+For the DAC, the following parts are "must reads":
 - 15.3 and 15.4 DAC output buffer enable and DAC channel enable: what to enable
 - 15.5.2 DAC channel conversion: explains, how the DAC works
 - 15.5.3 DAC output voltage: the voltage is calculated as Vref x DOR / 4096 for 12 bit.
@@ -32,6 +28,10 @@ And for the DAC:
 - 15.10 DAC registers
 
 Frankly, I am not sure what the different alignment loadings are for in 15.5.1. I suppose just convenience to manage 12 bits as 16 bits...?
+
+And for the ADC:
+
+TBD.
 
 ## Particularities
 
@@ -43,6 +43,10 @@ We don't have dual mode for the DAC. We don't have a second channel on the L0x3.
 The only DAC output is wired to only PA4. Funnily, when this GPIO is being set, one does not need to change anything. That is because within the L0xx devices, the MODER for the GPIO - the register that defines what the GPIO will be used for - is reset to 2'b11 or "analogue mode". Be VERY CAREFUL about this since it is very often not indicated that the reset value is flipped!!! I had a lot of difficult bughunting sessions before I learned to remember this...
 
 DAC is a pretty straight forwards peripheral with pretty straight forwards controls. On an L0x3, there is only one DAC (contrary to what the refman says) and it is always outputting the voltage values to PA4 (or pin A2).
+
+### On the DAC
+
+TBD.
 
 
 ## User guide
