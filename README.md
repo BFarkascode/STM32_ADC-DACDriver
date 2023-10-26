@@ -21,6 +21,7 @@ TBD.
 
 ## To read
 For the ADC, the following parts are "must reads":
+
 TBD.
 
 And for the DAC:
