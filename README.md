@@ -17,7 +17,22 @@ There is one massive difference though and that is how the voltages are being ge
 - DAC sets the voltage level as an analogue value, meaning that a 1.65V DAC output will be a just a flat line at 1.65 V
 
 ### ADC
-TBD.
+The ADC, as the name suggests, converts incoming analogue signals to digital signals. It does this by running on a clock of its own – that can be picked within its control registers and then prescaled – and then sample an incoming voltage comparing it with its own calibrated value.
+
+Mind, the ADC in the L0x3 has altogether 19 different channels, that are either connected to different pins (see the Table 15 within the datasheet to find, where they are) or to internal sensors, such as the in-built temperature sensor or the reference voltage measurement.
+
+In general, the ADC can be configured in a myriad of ways, depending on needs on speed, control and sensitivity. The resolution of the ADC, for instance, can be chosen between 12-bits down to 6-bits which of course defines the sensitivity of the ADC as well as the speed (the conversion time). I personally have not found a reason to not use 12-bit resolution though, albeit I haven’t sampled any fast signals yet. Similarly one can let the ADC run automatic by setting the AUTOOFF and the WAIT bits plus adjusting an appropriate hardware trigger to commence conversion or keep everything manual and control all activities through software (in the code, we will use software trigger but otherwise keep everything automatic to avoid unnecessary coding).
+
+The ADC has interrupt and DMA capabilities to facilitate a better control. (We will use the ADC to showcase the capabilities of DMA within the DMADriver project.)
+
+There is an internal voltage regulator within the ADC that practically liberates it from fluctuations between the mcu’s internal voltage levels. This provides a handy way to supervise the voltage levels within the mcu (there is a dedicated ADC channels to do this for us actually). Of note, this voltage regulator must be given enough time to activate before we use the ADC, all is done on a hardware level and we can just ignore it.
+
+A software-controlled calibration needs to be done once for one type of operating condition though . This calibration will be kept even if the ADC is disabled or the internal voltage regulator is turned off. The calibration is lost upon forced reset of the peripheral and loss of power.
+
+Regarding channel scanning, one can scan upwards or downwards regarding the numbering of the channels. One can also set continuous mode where the data will be flowing in through the channels all the time.
+
+In the end, the time to get a data converted by the ADC will be the resolution-dependent minimum conversion time plus the sampling time multiplied by the oversampling time. All in all, the timing for the ADC is rather specifically set and must be followed (Table 63).
+
 
 ## To read
 For the DAC, the following parts are "must reads":
@@ -29,9 +44,16 @@ For the DAC, the following parts are "must reads":
 
 Frankly, I am not sure what the different alignment loadings are for in 15.5.1. I suppose just convenience to manage 12 bits as 16 bits...?
 
-And for the ADC:
+All in all, it must be said that – similar to the UART – we have absolutely massive amount of calibration possibilities, most of them are only useful in very specific scenarios. As such, for a simple ADC conversion, I suggest reading the following:
 
-TBD.
+- 14.3. ADC functional description: the entire section is important since it shows, how to control the ADC manually
+- 14.4.2 Programmable resolution: very important Table 63 shows the timing that must be respected for an accurate conversion
+- 14.4.4 End of conversion sequence: tells what flag to look for when ADC conversion is done (we will use automatic off control below though)
+- 15.5.1 Data register and data alignment: how the data is emerging from the ADC_DR register
+- 14.6.1 Wait mode conversion: ensures that the ADC will only do an additional conversion when the previous data has been dealt with/read out from the ADC 
+- 14.6.2 Auto-off mode: explains AUTO-OFF and why it is useful to be set (shuts off the ADC when not needed)
+- 14.9 Temperature sensor and internal reference voltage: how the internal sensors work and what they are doing
+- 14.12 ADC registers
 
 ## Particularities
 
@@ -44,10 +66,22 @@ The only DAC output is wired to only PA4. Funnily, when this GPIO is being set, 
 
 DAC is a pretty straight forwards peripheral with pretty straight forwards controls. On an L0x3, there is only one DAC (contrary to what the refman says) and it is always outputting the voltage values to PA4 (or pin A2).
 
-### On the DAC
+### On the ADC
 
-TBD.
+The ADC MUST be calibrated before use. Calibration can only occur when the ADC is not measuring and disabled (thus before every ADC readjustment, we must be sure that the ADC is off).
 
+The ADC usually uses a lot of power, thus turning it off – either by hand or by activating the AUTO-OFF - when not needed is highly recommended.
+
+When using the automations like WAIT or AUTO-OFF, the control flags will be dealt with automatically and would not need any setting/resetting, except for the ADSTART bit (the start conversion). Mind, the ADC has an enable and a start conversion ADSTART bit, which are not the same!
+
+The EOC flag – the end of conversion for a channel flag – can be used to time the code to process the incoming data when not using DMA (see the DMADriver project for more on that).
+
+Data emerges in the ADC_DR register for all (!) ADC channels.
+
+Overrun events can easily occur when multiple channels are being sampled. Unlike other peripherals though, here an overruns event will not stop the peripheral. It will simply go on. We can only choose, what happens with the data (overwrite or discard).
+The number of how many times the input voltage on the channel is sampled (oversampling) can be set as well as how long one sampling must last. This latter is particularly important and is usually a time window specifically given to a sensor: we have to wait this long that the incoming voltage from the source becomes stabile enough to be sampled.
+
+The problem is that if the ADC is NOT clocked well or the sampling time is not respected, it will still give an output, but it will not be accurate. This can be dangerous. Consult the timings section in the refman for the ADC to understand it better.
 
 ## User guide
 
