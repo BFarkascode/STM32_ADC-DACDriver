@@ -83,6 +83,8 @@ The number of how many times the input voltage on the channel is sampled (oversa
 
 The problem is that if the ADC is NOT clocked well or the sampling time is not respected, it will still give an output, but it will not be accurate. This can be dangerous. Consult the timings section in the refman for the ADC to understand it better.
 
+When picking external input for the ADC, pick the right channel-GPIO combination. Also, the GPIO MUST be set as an analog pin.
+
 ## User guide
 
 The DAC test of the example code is pretty simple: one needs to add give the DAC output generation function an integer value and that value will be converted to a voltage value (use the equation in 15.5.3 to estimate, what that voltage will be). Within the #ifdef-s, two manually generated function example is also provided.
