@@ -87,10 +87,14 @@ When picking external input for the ADC, pick the right channel-GPIO combination
 
 ## User guide
 
-The DAC test of the example code is pretty simple: one needs to add give the DAC output generation function an integer value and that value will be converted to a voltage value (use the equation in 15.5.3 to estimate, what that voltage will be). Within the #ifdef-s, two manually generated function example is also provided.
+Uncomment the appropriate sections to run the DAC, the aDC or both.
+
+The DAC test of the example code is pretty simple: one needs to give the DAC output generation function an integer value and that value will be converted to a voltage value (use the equation in 15.5.3 to estimate, what that voltage will be). Within the #ifdef-s, two manually generated function example is also provided.
 
 We can simply switch between 8-bit and 12-bit DAC by writing to either the DHR8R1 or the DHR12R1 input buffer.
 
 If one uses the noise generation function instead of the standard, a noise can be added to the DAC output signal. There the second input of the function scales the noise from 0 to 15.
 
 Lastly, a suggestion: get an oscilloscope to see the change in DAC output or decrease the update time to the point where you can capture it with a multimeter.
+
+For the ADC, the particulairty lies in the calculations to convert the ADC raw data into the temperature. The code is taken directly from the example "A.8.17 Temperature computation code example". The detected value should slightly increase when touching the mcu with a finger.
