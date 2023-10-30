@@ -23,8 +23,8 @@
 /* USER CODE BEGIN Includes */
 #include "stdint.h"
 #include "stdio.h"
-#include "DACDriver_STM32L0x3.h"
-#include "ADCDriver_STM32L0x3.h"								//custom ADC driver
+#include "DACDriver_STM32L0x3.h"											//custom DAC driver
+#include "ADCDriver_STM32L0x3.h"											//custom ADC driver
 
 /* USER CODE END Includes */
 
@@ -67,7 +67,7 @@ int _write(int file, char *ptr, int len)
 {
 	int DataIdx;
 	for (DataIdx = 0; DataIdx < len; DataIdx++) {
-		HAL_UART_Transmit(&huart2, (uint8_t *)ptr++, 1, 100);			//here we pass the dereferenced pointer, one byte is sent over with a timeout of 100, using the huart2 settings
+		HAL_UART_Transmit(&huart2, (uint8_t *)ptr++, 1, 100);				//here we pass the dereferenced pointer, one byte is sent over with a timeout of 100, using the huart2 settings
 	}
 	return len;
 }
@@ -105,8 +105,14 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-//  ADCInit_Custom();
-  DACInit();
+  //-----------------ADC section---------------------//
+
+  ADCInit();
+
+  //-----------------DAC section---------------------//
+
+//  DACInit();
+
 
    /* USER CODE END 2 */
 
@@ -117,15 +123,21 @@ int main(void)
 
 //-----------------ADC section---------------------//
 
-//TBD
+	  //internal temperature sensor
+	  printf("Internal temperature is: %d Celsius \r\n", ADCIntTemp());
+	  HAL_Delay(1000);
+
+	  //analogue readout on the GPIO PB0
+//	  printf("Analoge reading on PB0 is : %d \r\n", ADCSingleChannelReadout());
+//	  HAL_Delay(1000);
 
 //-----------------DAC section---------------------//
 
-//#ifdef single_voltage
+#ifdef single_voltage
 	  int i = 2024;
 //	  DACGenerate(i);
 	  DACNoise(i,6);
-//#endif
+#endif
 
 #ifdef triangle_function
 	  int i = 0;
