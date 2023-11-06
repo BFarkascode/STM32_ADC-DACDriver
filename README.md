@@ -1,6 +1,6 @@
 # STM32_ADC-DACDriver
 
-Drivers for the ADC and the DAC in STM32_L0x3.
+Drivers for the ADC and the DAC in STM32_L0x3 using bare metal programming. 
 
 ## General description
 I have decided to have a project on the digital-analog converter (DAC) and the analog-digital converter (ADC) at the same time since, by their own, both of them are rather simple and straight forwards to implement. Nevertheless, it is good to have a driver for either, just in case we want to:
