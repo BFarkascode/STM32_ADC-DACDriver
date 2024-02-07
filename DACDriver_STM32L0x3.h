@@ -1,8 +1,16 @@
 /*
- * DACDriver_custom.h		v.1.0.
  *
  *  Created on: Oct 27, 2023
- *      Author: Balazs Farkas
+ *  Project: STM32_ADC-DACriver
+ *  File: DACDriver_custom.h
+ *  Author: BalazsFarkas
+ *  Processor: STM32L053R8
+ *  Compiler: ARM-GCC (STM32 IDE)
+ *  Program version: 1.0
+ *  Program description: N/A
+ *  Hardware description/pin distribution: N/A
+ *  Modified from: N/A
+ *  Change history: N/A
  */
 
 #ifndef INC_DACDRIVER_CUSTOM_H_
