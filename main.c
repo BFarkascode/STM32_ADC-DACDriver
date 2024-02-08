@@ -1,13 +1,12 @@
 /* USER CODE BEGIN Header */
 /**
- *  Project: STM32_ADC-DACDriver
- *  File: main.c
  *  Author: BalazsFarkas
+ *  Project: STM32_ADC-DACDriver
  *  Processor: STM32L053R8
  *  Compiler: ARM-GCC (STM32 IDE)
  *  Program version: 1.0
- *  Program description: N/A
- *  Hardware description/pin distribution: N/A
+ *  File: main.c
+ *  Hardware description/pin distribution: ADCIn8 on PB0, DAC on PA4
  *  Modified from: N/A
  *  Change history: N/A
  
